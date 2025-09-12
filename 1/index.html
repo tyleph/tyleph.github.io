@@ -40,7 +40,7 @@
             <section class="max-w-4xl mx-auto text-center">
                 <h2 class="text-3xl font-bold text-white mb-4">Project Overview</h2>
                 <p class="text-lg leading-relaxed text-left">
-                    Sergei Prokudin-Gorskii pioneered early color photography by capturing three filtered exposures on glass plates across the Russian Empire in the early 1900s. His collection of thousands of negatives contains a wide variety of captures of Russia through vivid color photography, including people, buildings, landscapes, and so much more. The goal of this project is to reconstruct high-quality color photographs from the digitized glass plate negatives of the Prokudin-Gorskii collection. Each photograph in the collection was captured as three separate black-and-white exposures taken through blue, green, and red filters. In this project, I implemented an algorithm that aligns the RGB channels to produce an artifact-free, colorized image with high precision.
+                    Sergei Prokudin-Gorskii pioneered early color photography by capturing three filtered exposures on glass plates across the Russian Empire in the early 1900s. His collection of thousands of negatives contains a wide variety of captures of Russia through vivid color photography, including people, buildings, landscapes, and so much more. The goal of this project is to reconstruct high-quality color photographs from his digitized glass plate negatives. Each photograph in the collection was captured as three separate black-and-white exposures taken through blue, green, and red filters. In this project, I implemented an algorithm that aligns the RGB channels to produce high-preicision colorized images.
                 </p>
             </section>
 
@@ -52,7 +52,7 @@
                     My alignment algorithm first treats the blue channel as the fixed, base image. The green and red channels are then individually aligned to this base. The alignment process involves searching over a specified window of possible pixel displacements (both x and y) to find the best offset for each channel.
                 </p>
                 <p class="text-lg leading-relaxed mb-6">
-                    To choose the best offsets, I implemented <strong>Normalized Cross-Correlation (NCC)</strong> as the similarity metric. NCC is highly effective because it is not as sensitive to large changes in brightness and contrast, which are common between different color filter exposures. A more basic metric like the L2 norm is far too sensitive to these brightness differences across filters. NCC computes a score between -1 (perfect anti-correlation) and +1 (perfect correlation), where the displacement yielding the highest score is chosen as the best fit. I implemented the following formula for NCC between two image patches, A and B:
+                    To choose the best offsets, I implemented <strong>Normalized Cross-Correlation (NCC)</strong> as the similarity metric. NCC is highly effective because it is not as sensitive to large changes in brightness and contrast, which are common between different color filter exposures. A more basic metric like the L2 norm is far too sensitive to these brightness differences across filters. NCC computes a score between -1 (perfect anti-correlation) and +1 (perfect correlation), so we want the displacement that yields the highest score. I implemented the following formula for NCC between two image patches, A and B:
                 </p>
                 <div class="content-section rounded-lg p-4 my-6 text-center text-lg">
                     $$
@@ -98,7 +98,7 @@
                             While NCC handles brightness differences well, one limitation is in the input features themselves. I was left to think, are there any features other than raw pixel values that can capture alignment better?
                         </p>
                         <p class="text-lg leading-relaxed mb-6">
-                            <strong>Solution:</strong> To improve alignment, I researched different features to possibly use as input to the NCC calculation. Instead of comparing raw pixel intensities, I applied a Sobel edge detection filter to each channel similar to the gradient convolutions taught in lecture. I used the x and y Sobel filters shown below to calculate the gradients, and then calculated used the gradient magnitudes as the input features. These edges align more on object boundaries, which is more consistent across color channels than raw intensity over the time differences between channels.
+                            <strong>Solution:</strong> To improve alignment, I researched different features to possibly use as input to the NCC calculation. Instead of comparing raw pixel intensities, I applied a Sobel edge detection filter to each channel similar to the gradient convolutions taught in lecture. I used the x and y Sobel filters shown below to calculate the gradients, and then calculated their magnitudes to use as the input features. These edges align better on object boundaries, which are more consistent across the color channels than raw intensity values despite slight shifts between channels.
                         </p>
                     <div class="flex flex-col md:flex-row justify-center items-start gap-8">
                         <div class="w-full md:w-auto">
