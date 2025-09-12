@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: Colorizing the Prokudin-Gorskii Photo Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+        }
+        .header-gradient {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content-section {
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <header class="text-center py-12 md:py-16">
+        <h1 class="text-4xl md:text-5xl font-bold header-gradient mb-2">
+            Project 1: Images of the Russian Empire
+        </h1>
+        <p class="text-xl text-gray-400">Colorizing the Prokudin-Gorskii Photo Collection</p>
+    </header>
+
+    <main class="container mx-auto px-6 pb-16">
+        <div class="space-y-16">
+
+            <section class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Project Overview</h2>
+                <p class="text-lg leading-relaxed text-left">
+                    Sergei Prokudin-Gorskii pioneered early color photography by capturing three filtered exposures on glass plates across the Russian Empire in the early 1900s. His collection of thousands of negatives contains a wide variety of captures of Russia through vivid color photography, including people, buildings, landscapes, and so much more. The goal of this project is to reconstruct high-quality color photographs from the digitized glass plate negatives of the Prokudin-Gorskii collection. Each photograph in the collection was captured as three separate black-and-white exposures taken through blue, green, and red filters. In this project, I implemented an algorithm that aligns the RGB channels to produce an artifact-free, colorized image with high precision.
+                </p>
+            </section>
+
+            <hr class="border-gray-700">
+
+            <section class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-4 text-center">Approach</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    My alignment algorithm first treats the blue channel as the fixed, base image. The green and red channels are then individually aligned to this base. The alignment process involves searching over a specified window of possible pixel displacements (both x and y) to find the best offset for each channel.
+                </p>
+                <p class="text-lg leading-relaxed mb-6">
+                    To choose the best offsets, I implemented <strong>Normalized Cross-Correlation (NCC)</strong> as the similarity metric. NCC is highly effective because it is not as sensitive to large changes in brightness and contrast, which are common between different color filter exposures. A more basic metric like the L2 norm is far too sensitive to these brightness differences across filters. NCC computes a score between -1 (perfect anti-correlation) and +1 (perfect correlation), where the displacement yielding the highest score is chosen as the best fit. I implemented the following formula for NCC between two image patches, A and B:
+                </p>
+                <div class="content-section rounded-lg p-4 my-6 text-center text-lg">
+                    $$
+                    \mathrm{NCC}(A, B) = \frac{(A - \mu_A) \cdot (B - \mu_B)}{\|A - \mu_A\| \, \|B - \mu_B\|}
+                    $$
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-3">Speed-Up: Image Pyramids</h3>
+                <p class="text-lg leading-relaxed">
+                    A brute-force search for the best displacement is computationally expensive, given that we are checking every possible pixel displacement in a specified range! For the high-resolution .tif images, this was not feasible as some optimal offsets were over 100 pixels away. To speed up my algorithm, I implemented an <strong>image pyramid</strong> search algorithm. The alignment is first calculated quickly on the smallest-scale images to narrow down the region I should be searching. This initial displacement is then used as a starting point to guide the search at the next, finer level of the pyramid. This process is repeated recursively until the alignment is refined on the original, full-resolution images. This heavily reduced computation time to ~10 seconds per image since I was only searching exhaustively in regions that I knew would have a better alignment.
+                </p>
+            </section>
+            
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Challenges & Solutions</h2>
+                <div class="space-y-12">
+
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Problem #1: Border Artifacts</h3>
+                        <p class="text-lg leading-relaxed mb-3">
+                            A significant challenge arose from the borders of the glass plate negatives, which contained artifacts and blemishes across the three channels. These noisy borders biased the NCC calculation, which often led to incorrect alignments as a result.
+                        </p>
+                        <p class="text-lg leading-relaxed mb-6">
+                            <strong>Solution:</strong> The solution was simply to crop the borders! I opted to crop a 10% margin from each image's boundary. This focused the alignment algorithm on the central image content, where the correlation between channels is most meaningful, resulting in much better alignment.
+                        </p>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                            
+                            <div class="content-section rounded-lg p-4 w-full md:w-1/2">
+                                <img src="imgs/harvesters_before_crop.jpg" alt="Alignment with borders" class="rounded-md w-full object-cover">
+                                <p class="text-center mt-3 font-medium text-white">Before: Without Border Cropping</p>
+                            </div>
+                            <div class="content-section rounded-lg p-4 w-full md:w-1/2">
+                                <img src="imgs/harvesters_after_crop.jpg" alt="Alignment after cropping" class="rounded-md w-full object-cover">
+                                <p class="text-center mt-3 font-medium text-white">After: With Border Cropping</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Problem #2: Limitations of Raw Pixel Features</h3>
+                        <p class="text-lg leading-relaxed mb-3">
+                            While NCC handles brightness differences well, one limitation is in the input features themselves. I was left to think, are there any features other than raw pixel values that can capture alignment better?
+                        </p>
+                        <p class="text-lg leading-relaxed mb-6">
+                            <strong>Solution:</strong> To improve alignment, I researched different features to possibly use as input to the NCC calculation. Instead of comparing raw pixel intensities, I applied a Sobel edge detection filter to each channel similar to the gradient convolutions taught in lecture. I used the x and y Sobel filters shown below to calculate the gradients, and then calculated used the gradient magnitudes as the input features. These edges align more on object boundaries, which is more consistent across color channels than raw intensity over the time differences between channels.
+                        </p>
+                    <div class="flex flex-col md:flex-row justify-center items-start gap-8">
+                        <div class="w-full md:w-auto">
+                            <p class="text-center"><strong>Sobel filter in the x-direction:</strong></p>
+                            <div class="content-section rounded-lg p-4 my-6 text-center text-lg">
+                                $$
+                                G_x =
+                                \begin{bmatrix}
+                                -1 & 0 & 1 \\
+                                -2 & 0 & 2 \\
+                                -1 & 0 & 1
+                                \end{bmatrix}
+                                $$
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-auto">
+                            <p class="text-center"><strong>Sobel filter in the y-direction:</strong></p>
+                            <div class="content-section rounded-lg p-4 my-6 text-center text-lg">
+                                $$
+                                G_y =
+                                \begin{bmatrix}
+                                -1 & -2 & -1 \\
+                                0 &  0 &  0 \\
+                                1 &  2 &  1
+                                \end{bmatrix}
+                                $$
+                            </div>
+                        </div>
+                    </div>
+                        <p><strong>Gradient Magnitude (Edge Strength) Calculation:</strong></p>
+                        <div class="content-section rounded-lg p-4 my-6 text-center text-lg">
+                            $$
+                            G = \sqrt{G_x^2 + G_y^2}
+                            $$
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                            <div class="content-section rounded-lg p-4 w-full md:w-1/2">
+                                <img src="imgs/church_before_sobel.jpg" alt="Alignment with standard NCC" class="rounded-md w-full object-cover">
+                                <p class="text-center mt-3 font-medium text-white">Before: NCC with Raw Pixels as Features</p>
+                            </div>
+                            <div class="content-section rounded-lg p-4 w-full md:w-1/2">
+                                <img src="imgs/church.jpg" alt="Alignment with Sobel edge detection" class="rounded-md w-full object-cover">
+                                <p class="text-center mt-3 font-medium text-white">After: NCC with Sobel Edges as Features</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700">
+
+            <section>
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Gallery of Results</h2>
+                
+                <!-- <h3 class="text-2xl font-bold text-white mb-6 text-center">Provided Images</h3> -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/cathedral.jpg" alt="Cathedral" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Cathedral</p>
+                        <p class="text-sm">G:(2, 5), R:(3, 12)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/church.jpg" alt="Church" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Church</p>
+                        <p class="text-sm">G:(4, 25), R:(-4, 58)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/emir.jpg" alt="Emir" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Emir</p>
+                        <p class="text-sm">G:(23, 49), R:(40, 107)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/harvesters.jpg" alt="Harvesters" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Harvesters</p>
+                        <p class="text-sm">G:(17, 60), R:(13, 123)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/icon.jpg" alt="Icon" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Icon</p>
+                        <p class="text-sm">G:(17, 42), R:(23, 90)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/italil.jpg" alt="Italil" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Italil</p>
+                        <p class="text-sm">G:(22, 39), R:(36, 77)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/lastochikino.jpg" alt="Lastochikino" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Lastochikino</p>
+                        <p class="text-sm">G:(-2, -3), R:(-8, 76)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/lugano.jpg" alt="Lugano" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Lugano</p>
+                        <p class="text-sm">G:(-17, 41), R:(-29, 91)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/melons.jpg" alt="Melons" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Melons</p>
+                        <p class="text-sm">G:(10, 80), R:(12, 177)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/monastery.jpg" alt="Monastery" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Monastery</p>
+                        <p class="text-sm">G:(2, -3), R:(2, 3)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/self_portrait.jpg" alt="Self Portrait" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Self Portrait</p>
+                        <p class="text-sm">G:(28, 77), R:(37, 176)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/siren.jpg" alt="Siren" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Siren</p>
+                        <p class="text-sm">G:(-7, 49), R:(-24, 96)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/three_generations.jpg" alt="Three Generations" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Three Generations</p>
+                        <p class="text-sm">G:(12, 54), R:(8, 111)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/tobolsk.jpg" alt="Tobolsk" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Tobolsk</p>
+                        <p class="text-sm">G:(2, 3), R:(3, 6)</p>
+                    </div>
+
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-16 mb-6 text-center">My Selected Images</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                     <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/milan_cathedral.jpg" alt="Milan Cathedral" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Milan Cathedral</p>
+                        <p class="text-sm">G:(11, 58), R:(24, 125)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/conservatory.jpg" alt="Conservatory" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Conservatory</p>
+                        <p class="text-sm">G:(28, 59), R:(34, 126)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 text-center">
+                        <img src="imgs/textile.jpg" alt="Textiles" class="rounded-md w-full object-cover mb-3">
+                        <p class="font-semibold text-white">Textiles</p>
+                        <p class="text-sm">G:(-16, 48), R:(-52, 91)</p>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="text-center py-8 mt-12 border-t border-gray-700">
+        <p class="text-gray-500">CS 180 Project 1</p>
+    </footer>
+
+</body>
+</html>
