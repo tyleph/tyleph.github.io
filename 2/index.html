@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS180 Project 2: Fun with Filters and Frequencies!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+        }
+        .header-gradient {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content-section {
+            background-color: #1f2937;
+        }
+        code {
+            background-color: #374151;
+            border-radius: 0.25rem;
+            padding: 0.1rem 0.3rem;
+            font-family: monospace;
+            color: #d1d5db;
+        }
+        pre > code {
+            display: block;
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <header class="text-center py-12 md:py-16">
+        <h1 class="text-4xl md:text-5xl font-bold header-gradient mb-2">
+            Project 2: Fun with Filters and Frequencies!
+        </h1>
+        <h2 class="text-4xl md:text-5xl font-bold header-gradient text-center mt-10">
+            Part 1: Fun with Filters
+        </h2>
+    </header>
+
+    <main class="container mx-auto px-6 pb-16">
+        <div class="space-y-16">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part 1.1: Convolutions from Scratch!</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    Here, I create a custom convolution function with zero-padding to handle the boundaries. I then tested it by convolving an image of myself with a 9x9 box filter and with finite difference operators $D_x$ and $D_y$.
+                </p>
+                <p class="text-lg leading-relaxed mb-8">
+                    I implemented the convolution function with both four and two "for loops." The implementation with 2 "for loops" was much faster due to <code>numpy</code>'s vectorization when performing the kernel dot product. However, when comparing my custom convolution with 2 "for loops" to <code>scipy.signal.convolve2d</code>, my implementation was still slower due to its optimizations. Regarding boundary handling, my function uses zero-padding along the borders so that the resulting image is the same size. The results were visually identical, confirming my implementation was correct.
+                </p>
+
+                <h3 class="text-2xl font-bold text-white mb-4">My Custom Convolution Code Snippet</h3>
+                <pre><code class="language-python">def convolve2d_two_loops(image, kernel):
+    img_h, img_w = image.shape
+    ker_h, ker_w = kernel.shape
+
+    pad_h = ker_h // 2
+    pad_w = ker_w // 2
+
+    # pad with zeros
+    padded_image = np.pad(image, ((pad_h, pad_h), (pad_w, pad_w)), constant_values=0)
+    
+    output = np.zeros_like(image)
+
+    # note: remember to flip kernel!!!
+    flipped_kernel = np.flip(kernel)
+
+    for y in range(img_h):
+        for x in range(img_w):
+            patch = padded_image[y:y+ker_h, x:x+ker_w]
+            output[y, x] = np.sum(patch * flipped_kernel)
+
+    return output</code></pre>
+
+                <h3 class="text-2xl font-bold text-white mt-8 mb-6">Results</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.1/myself_original_image.png" alt="My original image" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original Image</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.1/my_box_filter.png" alt="My box filter result" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">My Box Filter Convolution</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.1/scipy_box_filter.png" alt="SciPy box filter result" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">SciPy Box Filter Convolution</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.1/dx_filter.png" alt="Dx filter result" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Convolution with $D_x$</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.1/dy_filter.png" alt="Dy filter result" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Convolution with $D_y$</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part 1.2: Finite Difference Operator</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    In this part, I used the finite difference operators, $D_x = [1, -1]$ and $D_y = [1, -1]^T$, to compute the partial derivatives of the `cameraman` image. The partial derivative in x highlights vertical edges, while the partial derivative in y highlights horizontal edges.
+                </p>
+                <p class="text-lg leading-relaxed mb-8">
+                    I then computed the gradient magnitude using the formula $G = \sqrt{G_x^2 + G_y^2}$. To create a clean edge image, I binarized the gradient magnitude by setting a threshold. After some experimentation, I chose a threshold of <strong>0.32</strong>. This was high enough to remove most of the background noise like the grass but low enough to preserve the cameraman and his tripod. The tradeoff, however, is that removing more noise gets rid of some edges from the buildings in the background.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.2/cameraman.png" alt="Original Cameraman" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original Cameraman</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.2/cameraman_grad_x.png" alt="Gradient in X" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Partial Derivative in X</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.2/cameraman_grad_y.png" alt="Gradient in Y" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Partial Derivative in Y</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 md:col-start-1 lg:col-start-auto">
+                        <img src="images/1.2/cameraman_grad_magnitude.png" alt="Gradient Magnitude" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Gradient Magnitude</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.2/cameraman_edges.png" alt="Binarized Edge Image" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Binarized Edge Image (Thresholded)</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part 1.3: Derivative of Gaussian (DoG) Filter</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    The edge image from the previous part was quite noisy. To improve this, I first smoothed the image by convolving it with a Gaussian filter. This suppresses high-frequency noise. After smoothing, I repeated the process from Part 1.2 to find the edges. The resulting edge image is much cleaner, allowing me to pick a lower threshold to capture more edges and less noise.
+                </p>
+                <p class="text-lg leading-relaxed mb-8">
+                    We can also use the associative property of convolution to reverse the implementation order. Instead of smoothing the image first, we can apply the Gaussian filter on the derivative filters ($D_x$ and $D_y$) to create <strong>Derivative of Gaussian (DoG)</strong> filters. As shown below, the result of blurring then differentiating is identical to using a single DoG filter, as both approaches yield the same edges.
+                </p>
+                <h3 class="text-2xl font-bold text-white mt-8 mb-6">DoG Filters and Results</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.3/dog_filter_x.png" alt="DoG filter in X" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">DoG Filter in X</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.3/dog_filter_y.png" alt="DoG filter in Y" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">DoG Filter in Y</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.3/cameraman.png" alt="Original Cameraman" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original Cameraman</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 md:col-start-1 lg:col-start-auto">
+                        <img src="images/1.3/cameraman_grad_magnitude_smoothed.png" alt="Smoothed Gradient Magnitude" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Smoothed Gradient Magnitude</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/1.3/cameraman_edges_smoothed.png" alt="Smoothed Binarized Edges" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Smoothed Binarized Edges</p>
+                    </div>
+                </div>
+            </section>
+
+<div class="text-center py-12 md:py-16">
+                <p class="text-xl text-gray-400 mb-4">-------------------------------------</p>
+                <h2 class="text-4xl md:text-5xl font-bold header-gradient mb-2">
+                    Part 2: Fun with Frequencies!
+                </h2>
+            </div>
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part 2.1: Image "Sharpening"</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    In this part, I implement the <b>unsharp mask filter</b> to sharpen images. First, I use a low-pass Gaussian filter to blur the image. Subtracting this blurred version from the original image isolates the high-frequency details. I can then scale the high frequencies by a factor $\alpha$ and add the product back to the original image, which amplifies the high-frequency details and makes the image appear sharper.
+                </p>
+                <p class="text-lg leading-relaxed mb-8 text-center bg-gray-800 p-4 rounded-lg">
+                    The formula is: $ \text{Sharpened} = \text{Original} + \alpha (\text{Original} - \text{Blurred}) $
+                </p>
+
+                <h3 class="text-2xl font-bold text-white mt-8 mb-6">Sharpening the Taj Mahal</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/1_taj_original_blurry.png" alt="Blurry Taj Mahal" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original Image</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/2_taj_high_freq.png" alt="High Frequencies of Taj Mahal" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">High Frequencies</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/3_taj_sharpened.png" alt="Sharpened Taj Mahal" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Sharpened Result</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Sharpening a Blurred Photo of My Dog, Yuki!</h3>
+                <p class="text-lg leading-relaxed mb-6">
+                    For this example, I took a sharp original photo of my dog, Yuki, intentionally blurred it with a Gaussian filter, and then applied the unsharp mask filter to see how well I could recover the sharpness. The sharpened result is much clearer than the blurred version and closely resembles the original sharp image.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/4_yuki_original_sharp.png" alt="Original Sharp Yuki" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original Sharp Image</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/5_yuki_blurred.png" alt="Blurred Yuki" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Blurred Version</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/6_yuki_high_freq.png" alt="High Frequencies of Yuki" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">High Frequencies</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/7_yuki_sharpened_from_blurred.png" alt="Sharpened Yuki" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Sharpened Result</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Varying the Sharpening Amount ($\alpha$)</h3>
+                <p class="text-lg leading-relaxed mb-6">
+                    As mentioned above, we can scale the high frequencies by a factor of $\alpha$ to adjust the sharpness we are adding in. Using too large of an $\alpha$ leads to over-sharpening, making the edges appear too jagged and less natural.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="content-section rounded-lg p-4"><img src="images/2.1/yuki_sharpened_alpha_0.5.png" alt="Alpha 0.5" class="rounded-md w-full"><p class="text-center mt-3 font-medium text-white">Alpha = 0.5</p></div>
+                    <div class="content-section rounded-lg p-4"><img src="images/2.1/yuki_sharpened_alpha_1.5.png" alt="Alpha 1.5" class="rounded-md w-full"><p class="text-center mt-3 font-medium text-white">Alpha = 1.5</p></div>
+                    <div class="content-section rounded-lg p-4"><img src="images/2.1/yuki_sharpened_alpha_3.0.png" alt="Alpha 3.0" class="rounded-md w-full"><p class="text-center mt-3 font-medium text-white">Alpha = 3.0</p></div>
+                    <div class="content-section rounded-lg p-4"><img src="images/2.1/yuki_sharpened_alpha_5.0.png" alt="Alpha 5.0" class="rounded-md w-full"><p class="text-center mt-3 font-medium text-white">Alpha = 5.0 (Over-Sharpened)</p></div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700 my-16">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part 2.2: Hybrid Images</h2>
+                <p class="text-lg leading-relaxed mb-8">
+                    In hybrid images, we combine the low-frequency components of one image with the high-frequency components of another. When viewed up close, our eyes perceive the high-frequency details, but from a distance, we can only see the low-frequency structure. I implemented this by applying a Gaussian low-pass filter to one image and a high-pass filter to the other, then adding them together.
+                </p>
+
+                <h3 class="text-2xl font-bold text-white mt-8 mb-6">Favorite Result: Yuki &amp; Professor Kanazawa</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.1/4_yuki_original_sharp.png" alt="Original Yuki" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Yuki (High Frequencies)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.2/kanazawa.jpg" alt="Original Kanazawa" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Kanazawa (Low Frequencies)</p>
+                    </div>
+                     <div class="content-section rounded-lg p-4">
+                        <img src="images/2.2/hybrid_yuki_kanazawa.png" alt="Hybrid of Yuki and Kanazawa" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Final Hybrid Image</p>
+                    </div>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/2.2/frequency_analysis.png" alt="Frequency Analysis" class="rounded-md w-full">
+                    <p class="text-center mt-3 font-medium text-white">Frequency Analysis of the Hybridization Process</p>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Additional Examples</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                     <div class="content-section rounded-lg p-4">
+                        <img src="images/2.2/DerekPicture.jpg" alt="Original Derek" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 1: Derek</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                         <img src="images/2.2/nutmeg.jpg" alt="Original Nutmeg" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 2: Nutmeg</p>
+                    </div>
+                     <div class="content-section rounded-lg p-4">
+                        <img src="images/2.2/hybrid_nutmeg_derek.png" alt="Hybrid of Derek and Nutmeg" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Hybrid: Derek & Nutmeg</p>
+                    </div>
+                </div>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                     <div class="content-section rounded-lg p-4">
+                        <img src="images/2.2/panda.jpg" alt="Original Panda 1" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 1: Panda</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                         <img src="images/2.2/red_panda.jpg" alt="Original Panda 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 2: Red Panda</p>
+                    </div>
+                     <div class="content-section rounded-lg p-4">
+                        <img src="images/2.2/hybrid_pandas.png" alt="Hybrid of Pandas" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Hybrid: What Kind of Panda???</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700 my-16">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part 2.3 & 2.4: Multiresolution Blending</h2>
+                <!-- <p class="text-lg leading-relaxed mb-8">
+                    Multiresolution blending is a technique for combining two images using frequencies from Gaussian and Laplacian stacks. A Gaussian stack is created by repeatedly blurring an image, while a Laplacian stack stores the difference between adjacent levels of the Gaussian stack, capturing frequency differences at various scales. The images are then blended at each level of the Laplacian stack using the corresponding level of the Gaussian-blurred mask, and the results are summed up to create the final blended image.
+                </p> -->
+
+                <h3 class="text-2xl font-bold text-white mt-8 mb-6">The "Oraple"</h3>
+                <!-- <p class="text-lg leading-relaxed mb-6">
+                    Here is the classic example of blending an apple and an orange using a simple vertical mask. The Gaussian and Laplacian stacks visualize the decomposition process that enables the smooth transition.
+                </p> -->
+                <div class="grid grid-cols-1 gap-8 mb-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.3/oraple_gaussian_stack.png" alt="Oraple Gaussian Stack" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Gaussian Stack</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.3/oraple_laplacian_stack.png" alt="Oraple Laplacian Stack" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Laplacian Stack</p>
+                    </div>
+                </div>
+
+                <div class="content-section rounded-lg p-4 max-w-md mx-auto">
+                    <img src="images/2.3/oraple_laplacian_blend.png" alt="Blended Oraple" class="rounded-md w-full">
+                    <p class="text-center mt-3 font-medium text-white">Final Blended "Oraple"</p>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Custom Blends</h3>
+                <h4 class="text-xl font-bold text-white mt-8 mb-4">1. Eren & Reiner</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/eren.jpg" alt="Eren" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 1: Eren</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/reiner.jpg" alt="Reiner" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 2: Reiner</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/eren_reiner_blended.png" alt="Eren and Reiner Blended" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Blended Result</p>
+                    </div>
+                </div>
+
+                <h4 class="text-xl font-bold text-white mt-8 mb-4">2. Godzilla in Tokyo (Irregular Mask)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/godzilla.jpg" alt="Godzilla" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 1: Godzilla</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/tokyo.jpg" alt="Tokyo" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Original 2: Tokyo</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/godzilla_mask.png" alt="Godzilla Mask" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Irregular Mask</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/2.4/godzilla_tokyo_blended.png" alt="Godzilla and Tokyo Blended" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Blended Result</p>
+                    </div>
+                </div>
+
+                <h4 class="text-xl font-bold text-white mt-8 mb-4">Favorite Blend Process Visualization (Godzilla)</h4>
+                <p class="text-lg leading-relaxed mb-6">
+                   Here is the visualization of the Laplacian stack for my favorite blending result, Godzilla in Tokyo. We add these images in the stack to get the final blend as follows. Since Level 0 has the lowest frequencies, we add the frequency differences from the following layers in the stack.
+                </p>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/2.4/laplacian_stack_godzilla_tokyo.png" alt="Godzilla Blend Laplacian Stack Visualization" class="rounded-md w-full">
+                    <p class="text-center mt-3 font-medium text-white">Laplacian Stack Blending Process</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="text-center py-8 mt-12 border-t border-gray-700">
+        <p class="text-gray-500">CS 180 Project 2</p>
+    </footer>
+
+</body>
+</html>
