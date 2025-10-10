@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS180 Project 3: Image Warping and Mosaicing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+        }
+        .header-gradient {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content-section {
+            background-color: #1f2937;
+        }
+        code {
+            background-color: #374151;
+            border-radius: 0.25rem;
+            padding: 0.1rem 0.3rem;
+            font-family: monospace;
+            color: #d1d5db;
+        }
+        pre > code {
+            display: block;
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <header class="text-center py-12 md:py-16">
+        <h1 class="text-4xl md:text-5xl font-bold header-gradient mb-2">
+            Project 3: Image Warping and Mosaicing
+        </h1>
+    </header>
+
+    <main class="container mx-auto px-6 pb-16">
+        <div class="space-y-16">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part A.1: Shooting the Pictures</h2>
+                <p class="text-lg leading-relaxed mb-8">
+                    The first step was to capture images with a projective transformation between them. I achieved this by keeping my camera at a fixed point and rotating it to capture overlapping scenes. Below are two sets of images I took for this purpose.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/building1.jpeg" alt="Building part 1" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Building Image 1</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/building2.jpeg" alt="Building part 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Building Image 2</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/evening1.jpeg" alt="Evening part 1" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Evening Image 1</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/evening2.jpeg" alt="Evening part 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Evening Image 2</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part A.2: Recovering Homographies</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    To align the images, I needed to compute the homography matrix $H$, a 3x3 matrix with 8 degrees of freedom that transforms points from one image plane to another ($p' = Hp$). I manually selected at least 4 correspondence points between each pair of images. These points create an overdetermined system of linear equations of the form $Ah=b$, which I solved using least squares to find the 8 unknown values of $H$.
+                </p>
+
+                <!-- <h3 class="text-2xl font-bold text-white mb-4">System of Equations</h3>
+                <p class="text-lg leading-relaxed mb-6">
+                    Each point correspondence $(x, y) \to (x', y')$ provides two equations. With $n$ points, we can stack these into a $2n \times 8$ matrix $A$, an $8 \times 1$ vector $h$, and a $2n \times 1$ vector $b$:
+                </p>
+                $$
+                A = \begin{bmatrix}
+                x_1 & y_1 & 1 & 0 & 0 & 0 & -x'_1 x_1 & -x'_1 y_1 \\
+                0 & 0 & 0 & x_1 & y_1 & 1 & -y'_1 x_1 & -y'_1 y_1 \\
+                \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+                x_n & y_n & 1 & 0 & 0 & 0 & -x'_n x_n & -x'_n y_n \\
+                0 & 0 & 0 & x_n & y_n & 1 & -y'_n x_n & -y'_n y_n
+                \end{bmatrix}, \quad
+                h = \begin{bmatrix} h_{11} \\ h_{12} \\ h_{13} \\ h_{21} \\ h_{22} \\ h_{23} \\ h_{31} \\ h_{32} \end{bmatrix}, \quad
+                b = \begin{bmatrix} x'_1 \\ y'_1 \\ \vdots \\ x'_n \\ y'_n \end{bmatrix}
+                $$
+                <p class="text-lg leading-relaxed mt-6 mb-8">
+                The vector $h$ is then found by solving the least-squares problem: $h = (A^T A)^{-1} A^T b$.
+                </p> -->
+
+                <h3 class="text-2xl font-bold text-white mt-8 mb-6">Correspondence Points & Recovered Homography</h3>
+                <p class="text-lg leading-relaxed mb-8">
+                    Below are the selected correspondence points for two image pairs and the resulting homography matrix for the building images.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/building_correspondences.png" alt="Building correspondences" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Building Correspondences</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/campanile_correspondences.png" alt="Campanile correspondences" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Campanile Correspondences</p>
+                    </div>
+                </div>
+                <!-- <h4 class="text-xl font-bold text-white mt-8 mb-4">Homography for Building Images</h4> -->
+                <!-- <pre><code class="language-python">[[ 1.111e+00,  1.111e-01, -1.11e+02], -->
+ <!-- [ 1.111e-02,  1.111e+00, -1.11e+01], -->
+ <!-- [ 1.111e-04, -1.111e-05,  1.000e+00]]</code></pre> -->
+
+            </section>
+            
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part A.3: Image Rectification</h2>
+                <!-- <p class="text-lg leading-relaxed mb-8">
+                    To test the homography and warping functions, I performed image rectification. This involves taking an image with a planar surface viewed from an angle and warping it so the plane is frontal-parallel. I selected four points on the planar surface (the corners of a painting) and defined the destination points as the corners of a rectangle. The resulting image below shows the original image, the result using nearest-neighbor interpolation, and the result using bilinear interpolation.
+                </p> -->
+                <div class="content-section rounded-lg p-4 max-w-3xl mx-auto">
+                    <img src="images/rectification1.png" alt="Image rectification results" class="rounded-md w-full">
+                    <p class="text-center mt-3 font-medium text-white">Rectification of a Painting</p>
+                </div>
+                <p class="text-lg leading-relaxed mt-8">
+                    The results from <strong>bilinear interpolation</strong> are noticeably smoother and have fewer artifacts compared to <strong>nearest-neighbor interpolation</strong>, which produces a blockier result. This is because bilinear interpolation considers a weighted average of the four nearest pixel values, creating a more gradual transition of colors. The trade-off is that bilinear interpolation is slightly slower due to the additional calculations, while nearest neighbor is faster but lower quality.
+                </p>
+            </section>
+            
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part A.4: Mosaicing</h2>
+                <p class="text-lg leading-relaxed mb-8">
+                    With all the components working, I combined everything to create panoramic mosaics. The process involves:
+                    <ol class="list-decimal list-inside text-lg leading-relaxed space-y-2">
+                        <li>Manually selecting correspondence points between two images.</li>
+                        <li>Computing the homography matrix $H$ to transform one image into the coordinate system of the other.</li>
+                        <li>Warping the image using the computed homography and bilinear interpolation.</li>
+                        <li>Blending the warped image and the base image. I used a simple weighted average in the overlapping region to create a smooth transition and avoid harsh seams.</li>
+                    </ol>
+                </p>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Mosaic 1: Building</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/building1.jpeg" alt="Source image 1 for building mosaic" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Source 1</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/building2.jpeg" alt="Source image 2 for building mosaic" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Source 2</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 md:col-span-3">
+                        <img src="images/mosaic1.png" alt="Building mosaic result" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Resulting Mosaic</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Mosaic 2: Campanile</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/campanile1.jpeg" alt="Source image 1 for campanile mosaic" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Source 1</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/campanile2.jpeg" alt="Source image 2 for campanile mosaic" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Source 2</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4 md:col-span-3">
+                        <img src="images/mosaic2.png" alt="Campanile mosaic result" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Resulting Mosaic</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</body>
+</html>
