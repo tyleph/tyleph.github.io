@@ -87,9 +87,9 @@
                     To align the images, I needed to compute the homography matrix $H$, a 3x3 matrix with 8 degrees of freedom that transforms points from one image plane to another ($p' = Hp$). I manually selected at least 4 correspondence points between each pair of images. These points create an overdetermined system of linear equations of the form $Ah=b$, which I solved using least squares to find the 8 unknown values of $H$.
                 </p>
 
-                <!-- <h3 class="text-2xl font-bold text-white mb-4">System of Equations</h3>
+                <h3 class="text-2xl font-bold text-white mb-4">System of Equations</h3>
                 <p class="text-lg leading-relaxed mb-6">
-                    Each point correspondence $(x, y) \to (x', y')$ provides two equations. With $n$ points, we can stack these into a $2n \times 8$ matrix $A$, an $8 \times 1$ vector $h$, and a $2n \times 1$ vector $b$:
+                    Each point correspondence provides two equations. With $n$ points, we can stack these into a $2n \times 8$ matrix $A$, an $8 \times 1$ vector $h$, and a $2n \times 1$ vector $b$:
                 </p>
                 $$
                 A = \begin{bmatrix}
@@ -104,7 +104,7 @@
                 $$
                 <p class="text-lg leading-relaxed mt-6 mb-8">
                 The vector $h$ is then found by solving the least-squares problem: $h = (A^T A)^{-1} A^T b$.
-                </p> -->
+                </p>
 
                 <h3 class="text-2xl font-bold text-white mt-8 mb-6">Correspondence Points & Recovered Homography</h3>
                 <p class="text-lg leading-relaxed mb-8">
@@ -116,14 +116,14 @@
                         <p class="text-center mt-3 font-medium text-white">Building Correspondences</p>
                     </div>
                     <div class="content-section rounded-lg p-4">
-                        <img src="images/campanile_correspondences.png" alt="Campanile correspondences" class="rounded-md w-full">
-                        <p class="text-center mt-3 font-medium text-white">Campanile Correspondences</p>
+                        <img src="images/evening_correspondences.png" alt="Evening correspondences" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Evening Correspondences</p>
                     </div>
                 </div>
-                <!-- <h4 class="text-xl font-bold text-white mt-8 mb-4">Homography for Building Images</h4> -->
-                <!-- <pre><code class="language-python">[[ 1.111e+00,  1.111e-01, -1.11e+02], -->
- <!-- [ 1.111e-02,  1.111e+00, -1.11e+01], -->
- <!-- [ 1.111e-04, -1.111e-05,  1.000e+00]]</code></pre> -->
+                <h4 class="text-xl font-bold text-white mt-8 mb-4">Homography for Building Correspondences (From Left to Right Image)</h4>
+                <pre><code class="language-python">[[ 1.68e+00,  -7.94e-02, -6.98e+02],
+ [ 3.19e-01,  1.38e+00, -2.25e+01],
+ [ 4.95e-04, -5.97e-05,  1.00e+00]]</code></pre>
 
             </section>
             
@@ -131,15 +131,16 @@
 
             <section class="max-w-5xl mx-auto">
                 <h2 class="text-3xl font-bold text-white mb-6 text-center">Part A.3: Image Rectification</h2>
-                <!-- <p class="text-lg leading-relaxed mb-8">
-                    To test the homography and warping functions, I performed image rectification. This involves taking an image with a planar surface viewed from an angle and warping it so the plane is frontal-parallel. I selected four points on the planar surface (the corners of a painting) and defined the destination points as the corners of a rectangle. The resulting image below shows the original image, the result using nearest-neighbor interpolation, and the result using bilinear interpolation.
-                </p> -->
                 <div class="content-section rounded-lg p-4 max-w-3xl mx-auto">
                     <img src="images/vincent_rectification.png" alt="Image rectification results" class="rounded-md w-full">
-                    <p class="text-center mt-3 font-medium text-white">Rectification of a Painting</p>
+                    <p class="text-center mt-3 font-medium text-white">Rectification 1 (Laptop Screen) </p>
+                </div>
+                <div class="content-section rounded-lg p-4 max-w-3xl mx-auto">
+                    <img src="images/met_rectification.png" alt="Image rectification results" class="rounded-md w-full">
+                    <p class="text-center mt-3 font-medium text-white">Rectification 2 (The Met)</p>
                 </div>
                 <p class="text-lg leading-relaxed mt-8">
-                    The results from <strong>bilinear interpolation</strong> are noticeably smoother and have fewer artifacts compared to <strong>nearest-neighbor interpolation</strong>, which produces a blockier result. This is because bilinear interpolation considers a weighted average of the four nearest pixel values, creating a more gradual transition of colors. The trade-off is that bilinear interpolation is slightly slower due to the additional calculations, while nearest neighbor is faster but lower quality.
+                    The results from <strong>bilinear interpolation</strong> are smoother and have fewer artifacts compared to <strong>nearest-neighbor interpolation</strong>, which produces a blockier result. This is because bilinear interpolation considers a weighted average of the four nearest pixel values, creating a more smooth color blend. The trade-off is that bilinear interpolation is slightly slower due to the additional calculations, while nearest neighbor is faster but lower quality.
                 </p>
             </section>
             
@@ -148,12 +149,12 @@
             <section class="max-w-5xl mx-auto">
                 <h2 class="text-3xl font-bold text-white mb-6 text-center">Part A.4: Mosaicing</h2>
                 <p class="text-lg leading-relaxed mb-8">
-                    With all the components working, I combined everything to create panoramic mosaics. The process involves:
+                    Here I combine everything to create panoramic mosaics. My process involves:
                     <ol class="list-decimal list-inside text-lg leading-relaxed space-y-2">
                         <li>Manually selecting correspondence points between two images.</li>
-                        <li>Computing the homography matrix $H$ to transform one image into the coordinate system of the other.</li>
+                        <li>Computing the homography matrix $H$ to transform the left image onto the plane of the other image.</li>
                         <li>Warping the image using the computed homography and bilinear interpolation.</li>
-                        <li>Blending the warped image and the base image. I used a simple weighted average in the overlapping region to create a smooth transition and avoid harsh seams.</li>
+                        <li>Blending the warped image and the base image. I used a weighted average mask in the overlapping region, with 1 at the center of each (unwarped) image and a linear fall-off towards 0 at the edges, for a more smooth blending.</li>
                     </ol>
                 </p>
 
@@ -168,24 +169,117 @@
                         <p class="text-center mt-3 font-medium text-white">Source 2</p>
                     </div>
                     <div class="content-section rounded-lg p-4 md:col-span-3">
-                        <img src="images/mosaic1.png" alt="Building mosaic result" class="rounded-md w-full">
+                        <img src="images/manual_mosaic1.png" alt="Building mosaic result" class="rounded-md max-w-md w-full mx-auto">
                         <p class="text-center mt-3 font-medium text-white">Resulting Mosaic</p>
                     </div>
                 </div>
 
-                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Mosaic 2: Campanile</h3>
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">Mosaic 2: Evening</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                     <div class="content-section rounded-lg p-4">
-                        <img src="images/campanile1.jpeg" alt="Source image 1 for campanile mosaic" class="rounded-md w-full">
+                        <img src="images/evening1.jpeg" alt="Source image 1 for evening mosaic" class="rounded-md w-full">
                         <p class="text-center mt-3 font-medium text-white">Source 1</p>
                     </div>
                     <div class="content-section rounded-lg p-4">
-                        <img src="images/campanile2.jpeg" alt="Source image 2 for campanile mosaic" class="rounded-md w-full">
+                        <img src="images/evening2.jpeg" alt="Source image 2 for evening mosaic" class="rounded-md max-w-full">
                         <p class="text-center mt-3 font-medium text-white">Source 2</p>
                     </div>
                     <div class="content-section rounded-lg p-4 md:col-span-3">
-                        <img src="images/mosaic2.png" alt="Campanile mosaic result" class="rounded-md w-full">
+                        <img src="images/manual_mosaic2.png" alt="Evening mosaic result" class="rounded-md max-w-md w-full mx-auto">
                         <p class="text-center mt-3 font-medium text-white">Resulting Mosaic</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-700">
+
+            <section class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Part B: Automatic Stitching</h2>
+                
+                <p class="text-lg leading-relaxed mb-8">
+                    The goal of this part was to fully automate the mosaicing pipeline by implementing the steps from the paper "Multi-Image Matching using Multi-Scale Oriented Patches". By using automatic feature detectio, we can compute the final homography matrix without manually selecting correspondences.
+                </p>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">B.1: Harris Corner Detection</h3>
+                <p class="text-lg leading-relaxed mb-8">
+                    First, I implemented a Harris corner detector to find interest points in the image. To get a better spatial distribution of features, I then applied <strong>Adaptive Non-Maximal Suppression (ANMS)</strong>, which retains the strongest corners within a given radius, suppressing weaker neighbors.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/corners_no_anms.png" alt="Corners without ANMS" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Detected Corners (No ANMS)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/corners_with_anms.png" alt="Corners with ANMS" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Detected Corners (With ANMS)</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">B.2: Feature Descriptor Extraction</h3>
+                <p class="text-lg leading-relaxed mb-8">
+                    For each feature point from ANMS, I extracted a 40x40 patch, applied a Gaussian blur, and downsampled it to 8x8. I then normalized the result to create a feature descriptor that is invariant to bias and gain. Below are several examples of these 8x8 descriptors for the above image of my dog, Yuki.
+                </p>
+                <div class="content-section rounded-lg p-4 max-w-3xl mx-auto">
+                    <img src="images/feature_descriptors.png" alt="Extracted 8x8 feature descriptors" class="rounded-md w-full">
+                    <p class="text-center mt-3 font-medium text-white">Extracted 8x8 Feature Descriptors</p>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">B.3: Feature Matching</h3>
+                <p class="text-lg leading-relaxed mb-8">
+                    To match features between two images, I computed the distances of each feature's 2 nearest neighbors in the other image and used <strong>Lowe's ratio test</strong> to filter for good matches. A match is accepted only if the ratio of the distance to the 1st nearest neighbor and the 2nd nearest neighbor is below a threshold (which I chose to be 0.6). 
+                    <!-- This effectively filters out ambiguous matches where a feature point is similar to multiple points in the other image. -->
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/feature_matches1.png" alt="Feature matches for pair 1" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Feature Matches (Pair 1)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/feature_matches2.png" alt="Feature matches for pair 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Feature Matches (Pair 2)</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-white mt-12 mb-6">B.4: RANSAC and Automatic Mosaics</h3>
+                <p class="text-lg leading-relaxed mb-8">
+                    The feature matches from the previous step can still contain outliers. To find a robust homography, I implemented a 4-point <strong>RANSAC (RANdom SAmple Consensus)</strong> algorithm. This involves randomly sampling 4 correspondence points, computing the homography, and then determining the number of inliers. The homography with the largest set of inliers is chosen as the final transformation.
+                </p>
+                
+                <h4 class="text-xl font-bold text-white mt-8 mb-4">Manual vs. Automatic Mosaics</h4>
+                <p class="text-lg leading-relaxed mb-8">
+                    The results from this automatic stitching pipeline are much clear and more smooth with less artifacts than the manual mosaics from Part A. The RANSAC algorithm finds a better homography than my manual point selection.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/manual_mosaic1.png" alt="Manual mosaic 1" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Manual Mosaic 1 (from Part A)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/auto_mosaic1.png" alt="Automatic mosaic 1" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Automatic Mosaic 1 (with RANSAC)</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/manual_mosaic2.png" alt="Manual mosaic 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Manual Mosaic 2 (from Part A)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/auto_mosaic2.png" alt="Automatic mosaic 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Automatic Mosaic 2 (with RANSAC)</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/manual_mosaic3.png" alt="Manual mosaic 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Manual Mosaic 2 (from Part A)</p>
+                    </div>
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/auto_mosaic3.png" alt="Automatic mosaic 2" class="rounded-md w-full">
+                        <p class="text-center mt-3 font-medium text-white">Automatic Mosaic 2 (with RANSAC)</p>
                     </div>
                 </div>
             </section>
