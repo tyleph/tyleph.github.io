@@ -35,12 +35,20 @@
 <body class="text-gray-300">
 
     <header class="text-center py-12 md:py-16">
-        <h1 class="text-4xl md:text-5xl font-bold header-gradient mb-2">
-            Diffusion Models
+        <h1 class="text-5xl md:text-6xl font-bold header-gradient mb-4">
+            Project 5: Diffusion Models
         </h1>
-        <p class="text-xl text-gray-400">CS180 Project 5 | Part A</p>
-        <a href="../index.html" class="inline-block mt-6 text-blue-400 hover:text-blue-300 transition">&larr; Back to Portfolio</a>
+
+        <a href="../index.html" class="inline-block mt-4 text-blue-400 hover:text-blue-300 transition">
+            &larr; Back to Portfolio
+        </a>
     </header>
+
+    <section class="text-center py-8">
+        <h2 class="text-3xl md:text-4xl font-bold header-gradient mb-2">
+            Part A: Fun With Diffusion
+        </h2>
+    </section>
 
     <main class="container mx-auto px-6 pb-16 space-y-20 max-w-6xl">
 
@@ -49,15 +57,15 @@
             <p class="mb-6">Seed: 100 | Stage 1 Steps: 100 | Stage 2 Steps: 40</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/0_cyberpunk.png" alt="Cyberpunk City" class="rounded-md w-full">
+                    <img src="images/A/0_cyberpunk.png" alt="Cyberpunk City" class="rounded-md w-full">
                     <figcaption>"a cyberpunk city street at night with neon rain and reflections"</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/0_corgi_astronaut.png" alt="Corgi Astronaut" class="rounded-md w-full">
+                    <img src="images/A/0_corgi_astronaut.png" alt="Corgi Astronaut" class="rounded-md w-full">
                     <figcaption>"a photo of a cute corgi astronaut standing on the moon"</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/0_bulldog_climbing.png" alt="Bulldog Climbing" class="rounded-md w-full">
+                    <img src="images/A/0_bulldog_climbing.png" alt="Bulldog Climbing" class="rounded-md w-full">
                     <figcaption>"a photo of a muscular bulldog climbing a mountain"</figcaption>
                 </div>
             </div>
@@ -67,19 +75,19 @@
             <h2 class="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-2">Part 1.1: Implementing the Forward Process</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.1_campanile.png" alt="Original Campanile" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile.png" alt="Original Campanile" class="rounded-md w-full">
                     <figcaption>Original (t=0)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.1_campanile_250.png" alt="Campanile t=250" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile_250.png" alt="Campanile t=250" class="rounded-md w-full">
                     <figcaption>Noisy (t=250)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.1_campanile_500.png" alt="Campanile t=500" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile_500.png" alt="Campanile t=500" class="rounded-md w-full">
                     <figcaption>Noisy (t=500)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.1_campanile_750.png" alt="Campanile t=750" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile_750.png" alt="Campanile t=750" class="rounded-md w-full">
                     <figcaption>Noisy (t=750)</figcaption>
                 </div>
             </div>
@@ -90,22 +98,22 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="content-section rounded-lg p-4">
                     <div class="space-y-4">
-                        <img src="images/1.2_noisy_250.png" alt="Noisy 250" class="rounded-md w-full">
-                        <img src="images/1.2_campanile_gauss_250.png" alt="Gaussian Denoised 250" class="rounded-md w-full">
+                        <img src="images/A/1.2_noisy_250.png" alt="Noisy 250" class="rounded-md w-full">
+                        <img src="images/A/1.2_campanile_gauss_250.png" alt="Gaussian Denoised 250" class="rounded-md w-full">
                     </div>
                     <figcaption>Top: Noisy (t=250)<br>Bottom: Gaussian Blur</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
                     <div class="space-y-4">
-                        <img src="images/1.2_noisy_500.png" alt="Noisy 500" class="rounded-md w-full">
-                        <img src="images/1.2_campanile_gauss_500.png" alt="Gaussian Denoised 500" class="rounded-md w-full">
+                        <img src="images/A/1.2_noisy_500.png" alt="Noisy 500" class="rounded-md w-full">
+                        <img src="images/A/1.2_campanile_gauss_500.png" alt="Gaussian Denoised 500" class="rounded-md w-full">
                     </div>
                     <figcaption>Top: Noisy (t=500)<br>Bottom: Gaussian Blur</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
                     <div class="space-y-4">
-                        <img src="images/1.2_noisy_750.png" alt="Noisy 750" class="rounded-md w-full">
-                        <img src="images/1.2_campanile_gauss_750.png" alt="Gaussian Denoised 750" class="rounded-md w-full">
+                        <img src="images/A/1.2_noisy_750.png" alt="Noisy 750" class="rounded-md w-full">
+                        <img src="images/A/1.2_campanile_gauss_750.png" alt="Gaussian Denoised 750" class="rounded-md w-full">
                     </div>
                     <figcaption>Top: Noisy (t=750)<br>Bottom: Gaussian Blur</figcaption>
                 </div>
@@ -116,15 +124,15 @@
             <h2 class="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-2">Part 1.3: One-Step Denoising</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.3_campanile_denoised_250.png" alt="One Step Denoise 250" class="rounded-md w-full">
+                    <img src="images/A/1.3_campanile_denoised_250.png" alt="One Step Denoise 250" class="rounded-md w-full">
                     <figcaption>One-Step Denoised (t=250)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.3_campanile_denoised_500.png" alt="One Step Denoise 500" class="rounded-md w-full">
+                    <img src="images/A/1.3_campanile_denoised_500.png" alt="One Step Denoise 500" class="rounded-md w-full">
                     <figcaption>One-Step Denoised (t=500)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.3_campanile_denoised_750.png" alt="One Step Denoise 750" class="rounded-md w-full">
+                    <img src="images/A/1.3_campanile_denoised_750.png" alt="One Step Denoise 750" class="rounded-md w-full">
                     <figcaption>One-Step Denoised (t=750)</figcaption>
                 </div>
             </div>
@@ -136,19 +144,19 @@
             <h3 class="text-xl font-bold text-white mb-4">Comparison of Denoising Methods</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.1_campanile.png" alt="Original" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile.png" alt="Original" class="rounded-md w-full">
                     <figcaption>Original Image</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.4_campanile_iterative_denoise.png" alt="Iterative" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_iterative_denoise.png" alt="Iterative" class="rounded-md w-full">
                     <figcaption>Iterative Denoising</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.4_campanile_one_step_denoise.png" alt="One Step" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_one_step_denoise.png" alt="One Step" class="rounded-md w-full">
                     <figcaption>One-Step Denoising</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.4_campanile_gauss.png" alt="Gaussian" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_gauss.png" alt="Gaussian" class="rounded-md w-full">
                     <figcaption>Gaussian Blur</figcaption>
                 </div>
             </div>
@@ -156,23 +164,23 @@
             <h3 class="text-xl font-bold text-white mb-4">Iterative Process Steps</h3>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.4_campanile_step_30.png" alt="Step 30" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_step_30.png" alt="Step 30" class="rounded-md w-full">
                     <figcaption>Step 30</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.4_campanile_step_25.png" alt="Step 25" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_step_25.png" alt="Step 25" class="rounded-md w-full">
                     <figcaption>Step 25</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.4_campanile_step_20.png" alt="Step 20" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_step_20.png" alt="Step 20" class="rounded-md w-full">
                     <figcaption>Step 20</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.4_campanile_step_15.png" alt="Step 15" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_step_15.png" alt="Step 15" class="rounded-md w-full">
                     <figcaption>Step 15</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.4_campanile_step_10.png" alt="Step 10" class="rounded-md w-full">
+                    <img src="images/A/1.4_campanile_step_10.png" alt="Step 10" class="rounded-md w-full">
                     <figcaption>Step 10</figcaption>
                 </div>
             </div>
@@ -183,19 +191,19 @@
             <p class="mb-4 text-gray-400">Prompt: "a high quality photo"</p>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.5_sample1.png" alt="Sample 1" class="rounded-md w-full">
+                    <img src="images/A/1.5_sample1.png" alt="Sample 1" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.5_sample2.png" alt="Sample 2" class="rounded-md w-full">
+                    <img src="images/A/1.5_sample2.png" alt="Sample 2" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.5_sample3.png" alt="Sample 3" class="rounded-md w-full">
+                    <img src="images/A/1.5_sample3.png" alt="Sample 3" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.5_sample4.png" alt="Sample 4" class="rounded-md w-full">
+                    <img src="images/A/1.5_sample4.png" alt="Sample 4" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.5_sample5.png" alt="Sample 5" class="rounded-md w-full">
+                    <img src="images/A/1.5_sample5.png" alt="Sample 5" class="rounded-md w-full">
                 </div>
             </div>
         </section>
@@ -205,19 +213,19 @@
             <p class="mb-4 text-gray-400">Prompt: "a high quality photo" (CFG Scale = 7)</p>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.6_sample1.png" alt="CFG Sample 1" class="rounded-md w-full">
+                    <img src="images/A/1.6_sample1.png" alt="CFG Sample 1" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.6_sample2.png" alt="CFG Sample 2" class="rounded-md w-full">
+                    <img src="images/A/1.6_sample2.png" alt="CFG Sample 2" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.6_sample3.png" alt="CFG Sample 3" class="rounded-md w-full">
+                    <img src="images/A/1.6_sample3.png" alt="CFG Sample 3" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.6_sample4.png" alt="CFG Sample 4" class="rounded-md w-full">
+                    <img src="images/A/1.6_sample4.png" alt="CFG Sample 4" class="rounded-md w-full">
                 </div>
                 <div class="content-section rounded-lg p-2">
-                    <img src="images/1.6_sample5.png" alt="CFG Sample 5" class="rounded-md w-full">
+                    <img src="images/A/1.6_sample5.png" alt="CFG Sample 5" class="rounded-md w-full">
                 </div>
             </div>
         </section>
@@ -228,32 +236,32 @@
             <h3 class="text-xl font-bold text-white mb-4">SDEdit on Campanile</h3>
             <div class="flex flex-col md:flex-row gap-6 mb-12 items-center">
                 <div class="content-section rounded-lg p-4 w-full md:w-1/4">
-                    <img src="images/1.1_campanile.png" alt="Original" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile.png" alt="Original" class="rounded-md w-full">
                     <figcaption>Original Image</figcaption>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full md:w-3/4">
                     <div class="content-section rounded-lg p-2">
-                        <img src="images/1.7_i_start_1.png" alt="Start 1" class="rounded-md w-full">
+                        <img src="images/A/1.7_i_start_1.png" alt="Start 1" class="rounded-md w-full">
                         <figcaption>i_start = 1</figcaption>
                     </div>
                     <div class="content-section rounded-lg p-2">
-                        <img src="images/1.7_i_start_3.png" alt="Start 3" class="rounded-md w-full">
+                        <img src="images/A/1.7_i_start_3.png" alt="Start 3" class="rounded-md w-full">
                         <figcaption>i_start = 3</figcaption>
                     </div>
                     <div class="content-section rounded-lg p-2">
-                        <img src="images/1.7_i_start_5.png" alt="Start 5" class="rounded-md w-full">
+                        <img src="images/A/1.7_i_start_5.png" alt="Start 5" class="rounded-md w-full">
                         <figcaption>i_start = 5</figcaption>
                     </div>
                     <div class="content-section rounded-lg p-2">
-                        <img src="images/1.7_i_start_7.png" alt="Start 7" class="rounded-md w-full">
+                        <img src="images/A/1.7_i_start_7.png" alt="Start 7" class="rounded-md w-full">
                         <figcaption>i_start = 7</figcaption>
                     </div>
                     <div class="content-section rounded-lg p-2">
-                        <img src="images/1.7_i_start_10.png" alt="Start 10" class="rounded-md w-full">
+                        <img src="images/A/1.7_i_start_10.png" alt="Start 10" class="rounded-md w-full">
                         <figcaption>i_start = 10</figcaption>
                     </div>
                     <div class="content-section rounded-lg p-2">
-                        <img src="images/1.7_i_start_20.png" alt="Start 20" class="rounded-md w-full">
+                        <img src="images/A/1.7_i_start_20.png" alt="Start 20" class="rounded-md w-full">
                         <figcaption>i_start = 20</figcaption>
                     </div>
                 </div>
@@ -268,11 +276,11 @@
                     <h4 class="text-lg font-bold text-gray-300 mb-2">Hand Drawn: Peashooter</h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="content-section rounded-lg p-4">
-                            <img src="images/1.7.1_drawing_1.png" alt="Drawing 1 Original" class="rounded-md w-full">
+                            <img src="images/A/1.7.1_drawing_1.png" alt="Drawing 1 Original" class="rounded-md w-full">
                             <figcaption>Original Drawing</figcaption>
                         </div>
                         <div class="content-section rounded-lg p-4 md:col-span-2">
-                            <img src="images/1.7.1_drawing_1_results.png" alt="Drawing 1 Results" class="rounded-md w-full">
+                            <img src="images/A/1.7.1_drawing_1_results.png" alt="Drawing 1 Results" class="rounded-md w-full">
                             <figcaption>SDEdit Results (Various Noise Levels)</figcaption>
                         </div>
                     </div>
@@ -282,11 +290,11 @@
                     <h4 class="text-lg font-bold text-gray-300 mb-2">Hand Drawn: Wallnut</h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="content-section rounded-lg p-4">
-                            <img src="images/1.7.1_drawing_2.png" alt="Drawing 2 Original" class="rounded-md w-full">
+                            <img src="images/A/1.7.1_drawing_2.png" alt="Drawing 2 Original" class="rounded-md w-full">
                             <figcaption>Original Drawing</figcaption>
                         </div>
                         <div class="content-section rounded-lg p-4 md:col-span-2">
-                            <img src="images/1.7.1_drawing_2_results.png" alt="Drawing 2 Results" class="rounded-md w-full">
+                            <img src="images/A/1.7.1_drawing_2_results.png" alt="Drawing 2 Results" class="rounded-md w-full">
                             <figcaption>SDEdit Results (Various Noise Levels)</figcaption>
                         </div>
                     </div>
@@ -296,11 +304,11 @@
                     <h4 class="text-lg font-bold text-gray-300 mb-2">Web Image</h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="content-section rounded-lg p-4">
-                            <img src="images/1.7.1_web_img_orig.png" alt="Web Original" class="rounded-md w-full">
+                            <img src="images/A/1.7.1_web_img_orig.png" alt="Web Original" class="rounded-md w-full">
                             <figcaption>Original Image</figcaption>
                         </div>
                         <div class="content-section rounded-lg p-4 md:col-span-2">
-                            <img src="images/1.7.1_web_img_results.png" alt="Web Results" class="rounded-md w-full">
+                            <img src="images/A/1.7.1_web_img_results.png" alt="Web Results" class="rounded-md w-full">
                             <figcaption>SDEdit Results (Various Noise Levels)</figcaption>
                         </div>
                     </div>
@@ -313,45 +321,45 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.1_campanile.png" alt="Original" class="rounded-md w-full">
+                    <img src="images/A/1.1_campanile.png" alt="Original" class="rounded-md w-full">
                     <figcaption>Original</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_campanile_mask.png" alt="Mask" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_campanile_mask.png" alt="Mask" class="rounded-md w-full">
                     <figcaption>Mask</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_campanile_inpaint.png" alt="Inpainted" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_campanile_inpaint.png" alt="Inpainted" class="rounded-md w-full">
                     <figcaption>Inpainted Result</figcaption>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_golden_gate.png" alt="Original" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_golden_gate.png" alt="Original" class="rounded-md w-full">
                     <figcaption>Original</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_golden_gate_mask.png" alt="Mask" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_golden_gate_mask.png" alt="Mask" class="rounded-md w-full">
                     <figcaption>Mask</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_golden_gate_inpaint.png" alt="Inpainted" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_golden_gate_inpaint.png" alt="Inpainted" class="rounded-md w-full">
                     <figcaption>Inpainted Result</figcaption>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_penguin.png" alt="Original" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_penguin.png" alt="Original" class="rounded-md w-full">
                     <figcaption>Original</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_penguin_mask.png" alt="Mask" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_penguin_mask.png" alt="Mask" class="rounded-md w-full">
                     <figcaption>Mask</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.2_penguine_impaint.png" alt="Inpainted" class="rounded-md w-full">
+                    <img src="images/A/1.7.2_penguine_impaint.png" alt="Inpainted" class="rounded-md w-full">
                     <figcaption>Inpainted Result</figcaption>
                 </div>
             </div>
@@ -363,15 +371,15 @@
             
             <div class="grid grid-cols-1 gap-8">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.3_campanile_cyberpunk.png" alt="Campanile Cyberpunk" class="rounded-md w-full">
+                    <img src="images/A/1.7.3_campanile_cyberpunk.png" alt="Campanile Cyberpunk" class="rounded-md w-full">
                     <figcaption>Campanile (Various Noise Levels)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.3_golden_gate_cyberpunk.png" alt="Golden Gate Cyberpunk" class="rounded-md w-full">
+                    <img src="images/A/1.7.3_golden_gate_cyberpunk.png" alt="Golden Gate Cyberpunk" class="rounded-md w-full">
                     <figcaption>Golden Gate (Various Noise Levels)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.7.3_penguin_cyberpunk.png" alt="Penguin Cyberpunk" class="rounded-md w-full">
+                    <img src="images/A/1.7.3_penguin_cyberpunk.png" alt="Penguin Cyberpunk" class="rounded-md w-full">
                     <figcaption>Penguin (Various Noise Levels)</figcaption>
                 </div>
             </div>
@@ -386,8 +394,8 @@
 
                 <!-- Visual Anagram Set 1 -->
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.8_old_man.png" alt="Old Man Painting" class="rounded-md w-1/2 mb-4 mx-auto">
-                    <img src="images/1.8_campfire.png" alt="Campfire Painting" class="rounded-md w-1/2 mb-4 mx-auto">
+                    <img src="images/A/1.8_old_man.png" alt="Old Man Painting" class="rounded-md w-1/2 mb-4 mx-auto">
+                    <img src="images/A/1.8_campfire.png" alt="Campfire Painting" class="rounded-md w-1/2 mb-4 mx-auto">
                     <figcaption class="mt-2 text-sm text-gray-300">
                         <span class="font-semibold">Set 1:</span>
                         "an oil painting of an old man"  
@@ -398,8 +406,8 @@
 
                 <!-- Visual Anagram Set 2 -->
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.8_dragon.png" alt="Dragon Painting" class="rounded-md w-1/2 mb-4 mx-auto">
-                    <img src="images/1.8_battle_ship.png" alt="Battle Ship Painting" class="rounded-md w-1/2 mb-4 mx-auto">
+                    <img src="images/A/1.8_dragon.png" alt="Dragon Painting" class="rounded-md w-1/2 mb-4 mx-auto">
+                    <img src="images/A/1.8_battle_ship.png" alt="Battle Ship Painting" class="rounded-md w-1/2 mb-4 mx-auto">
                     <figcaption class="mt-2 text-sm text-gray-300">
                         <span class="font-semibold">Set 2:</span>
                         "a watercolor painting of a fire-breathing dragon"  
@@ -416,12 +424,139 @@
             <h2 class="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-2">Part 1.9: Hybrid Images</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.9_hybrid1.png" alt="Hybrid 1" class="rounded-md w-1/2 mb-4 mx-auto">
-                    <figcaption>"a medieval battle ship" + "a swarm of fireflies"</figcaption>
+                    <img src="images/A/1.9_hybrid1.png" alt="Hybrid 1" class="rounded-md w-1/2 mb-4 mx-auto">
+                    <figcaption class="font-semibold text-sm text-gray-300">"a medieval battle ship" (low freq) + "a swarm of fireflies" (high freq)</figcaption>
                 </div>
                 <div class="content-section rounded-lg p-4">
-                    <img src="images/1.9_hybrid2.png" alt="Hybrid 2" class="rounded-md w-1/2 mb-4 mx-auto">
-                    <figcaption>"a relaxing panda" + "an orchestra playing music"</figcaption>
+                    <img src="images/A/1.9_hybrid2.png" alt="Hybrid 2" class="rounded-md w-1/2 mb-4 mx-auto">
+                    <figcaption class="font-semibold text-sm text-gray-300">"a relaxing panda" (low freq) + "an orchestra playing music" (high freq)</figcaption>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-gray-700 my-16"></div>
+        
+        <section class="text-center py-8">
+            <h2 class="text-3xl md:text-4xl font-bold header-gradient mb-2">
+                Part B: Diffusion from Scratch
+            </h2>
+            <p class="text-xl text-gray-400">Training Flow Matching Models on MNIST</p>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-2">Part 1: Single-Step Denoising</h2>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">1.2 Noising Process</h3>
+            <div class="content-section rounded-lg p-4">
+                <img src="images/B/1.2_noising_viz.png" alt="Noising Visualization" class="rounded-md w-1/2 mx-auto">
+                <figcaption>Visualizing the noising process with σ = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]</figcaption>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">1.2.1 Training the Denoiser</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/1.2.1_loss_curve.png" alt="Loss Curve" class="rounded-md w-full">
+                    <figcaption>Training Loss Curve</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/1.2.1_samples_1_epoch.png" alt="Epoch 1 Samples" class="rounded-md w-full">
+                    <figcaption>Samples after Epoch 1</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/1.2.1_samples_5_epochs.png" alt="Epoch 5 Samples" class="rounded-md w-full">
+                    <figcaption>Samples after Epoch 5</figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">1.2.3 Denoising Pure Noise</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/1.2.3_loss_curve.png" alt="Pure Noise Loss" class="rounded-md w-full">
+                    <figcaption>Training Loss (Pure Noise)</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/1.2.3_epoch_1_viz.png" alt="Pure Noise Epoch 1" class="rounded-md w-full">
+                    <figcaption>Epoch 1 Results</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/1.2.3_epoch_5_viz.png" alt="Pure Noise Epoch 5" class="rounded-md w-full">
+                    <figcaption>Epoch 5 Results</figcaption>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <p class="text-gray-300">
+                    <strong>Analysis:</strong> When the model attempts to denoise pure noise (which it wasn't trained on), it fails to generate distinct digits. Instead, we can see that the outputs look like blurry, average digits. This happens because the model is trained with an L2 (MSE) loss, so when faced with ambiguous inputs like pure noise, the optimal strategy to minimize error is to predict the "average" of the digits dataset rather than committing to a specific digit.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-2">Part 2: Flow Matching</h2>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">2.2 Time-Conditioned Training</h3>
+            <div class="content-section rounded-lg p-4 max-w-2xl mx-auto">
+                <img src="images/B/2.2_loss_curve_10_epochs.png" alt="Time Conditioned Loss" class="rounded-md w-full">
+                <figcaption>Training Loss Curve (Time-Conditioned UNet)</figcaption>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">2.3 Time-Conditioned Sampling</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/2.3_sampling_1_epoch.png" alt="Epoch 1" class="rounded-md w-full">
+                    <figcaption>Epoch 1</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/2.3_sampling_5_epochs.png" alt="Epoch 5" class="rounded-md w-full">
+                    <figcaption>Epoch 5</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/2.3_sampling_10_epochs.png" alt="Epoch 10" class="rounded-md w-full">
+                    <figcaption>Epoch 10</figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">2.5 Class-Conditioned Training</h3>
+            <div class="content-section rounded-lg p-4 max-w-2xl mx-auto">
+                <img src="images/B/2.5_loss_curve_10_epochs.png" alt="Class Conditioned Loss" class="rounded-md w-full">
+                <figcaption>Training Loss Curve (Class-Conditioned)</figcaption>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-bold text-gray-200 mb-4">2.6 Class-Conditioned Sampling</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/2.6_samples_1_epoch.png" alt="Epoch 1" class="rounded-md w-full">
+                    <figcaption>Epoch 1 (Guidance 5.0, with exponential learning rate decay scheduler)</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/2.6_samples_5_epochs.png" alt="Epoch 5" class="rounded-md w-full">
+                    <figcaption>Epoch 5 (Guidance 5.0, with exponential learning rate decay scheduler)</figcaption>
+                </div>
+                <div class="content-section rounded-lg p-4">
+                    <img src="images/B/2.6_samples_10_epochs_with_scheduler.png" alt="Epoch 10" class="rounded-md w-full">
+                    <figcaption>Epoch 10 (Guidance 5.0, with exponential learning rate decay scheduler)</figcaption>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h4 class="text-lg font-bold text-gray-300 mb-4">Sampling without Learning Rate Decay Scheduler</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="content-section rounded-lg p-4">
+                        <img src="images/B/2.6_sampling_10_epochs_no_scheduler.png" alt="No Scheduler Results" class="rounded-md w-full">
+                        <figcaption>Epoch 10 (No Scheduler)</figcaption>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                        <p class="text-gray-300">
+                            <strong>Impact of removing the scheduler:</strong> The standard scheduler decays the learning rate to refine the model's weights as it converges. Without it, the model may oscillate or fail to settle into a good minimum. To compensate for this and achieve the results on the left, I lowered the constant learning rate from 1e-2 to 1e-3, which I found kept training stable while finding a good "sweet spot" to produce the same results.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
